@@ -10,6 +10,7 @@ import (
 	"os"
 	"os/exec"
 	"runtime"
+	"time"
 )
 
 const (
@@ -66,6 +67,7 @@ func run(filename string, out io.Writer, skipPreview bool) error {
 	if skipPreview {
 		return nil
 	}
+	defer os.Remove(outName)
 	return preview(outName)
 }
 
@@ -106,6 +108,7 @@ func preview(filename string) error {
 	if err != nil {
 		return err
 	}
-
-	return exec.Command(cPath, cParams...).Run()
+	err = exec.Command(cPath, cParams...).Run()
+	time.Sleep(2 * time.Second)
+	return err
 }
